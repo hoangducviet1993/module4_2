@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @SessionAttributes("user")
+
 public class LoginController {
 
     /*add user in model attribute*/
