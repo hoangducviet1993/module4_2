@@ -25,8 +25,8 @@ public class ClassRoomService implements IClassRoomService {
     }
 
     @Override
-    public void save(ClassRoom classRoom) {
-        classRoomRepository.save(classRoom);
+    public ClassRoom save(ClassRoom classRoom) {
+        return classRoomRepository.save(classRoom);
     }
 
     @Override
