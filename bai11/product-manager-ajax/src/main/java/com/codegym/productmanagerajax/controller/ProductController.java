@@ -60,4 +60,12 @@ public class ProductController {
         productService.remove(id);
         return new ResponseEntity<>(productOptional.get(), HttpStatus.NO_CONTENT);
     }
+    @GetMapping("/findByName")
+    public ResponseEntity<Iterable<Product>> findByName(@RequestParam String key) {
+        List<Product> products = (List<Product>) productService.findByNameContaining(key);
+        if (products.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
 }

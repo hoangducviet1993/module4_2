@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PRODUCT MANAGER</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        function getAllProduct() {
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:8080/api/products",
+                success: function (products) {
+                    console.log(products)
+                    displayProduct(products)
+                }
+            })
+        }
+
+        function findByName() {
+            let text = document.getElementById("search").value;
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:8080/api/products/findByName?key=" + text,
+                success: function (products) {
+                    console.log(products)
+                    displayProduct(products)
+                }
+            })
+        }
+
+        function displayProduct(array) {
+            let res = "";
+            res += `<table border="1" cellpadding="5">
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Category</th>
+                    <th colspan="2">Action</th>
+                </tr>`
+            for (let i = 0; i < array.length; i++) {
+                res += `<tr>
+                    <td> ${array[i].name}</td>
+                    <td> ${array[i].price}</td>
+                    <td> ${array[i].quantity}</td>
+                    <td> ${array[i].category.name}</td>
+                    <td><button onclick="showFormEditProduct(${array[i].id})">Edit</button></td>
+                    <td><button onclick="deleteProduct(${array[i].id})">Delete</button></td>
+                        </tr>`
+            }
+            res += `</table>`
+            document.getElementById("display").innerHTML = res;
+        }
+
+        function formCreate() {
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:8080/api/categories",
+                success: function (categories) {
+                    console.log(categories);
+                    let form = `<table cellpadding="5">
+                            <tr>
+                                <th>Name: </th>
+                                <td><input type="text" id="name"></td>
+                            </tr>
+                            <tr>
+                                <th>Price: </th>
+                                <td><input type="number" id="price"></td>
+                            </tr>
+                            <tr>
+                                <th>Quantity: </th>
+                                <td><input type="number" id="quantity"></td>
+                            </tr>
+                            <tr>
+                                <th>Category: </th>
+                                <td>
+                                    <select id="category">`
+                    for (let i = 0; i < categories.length; i++) {
+                        form += `<option value="${categories[i].id}">${categories[i].name}</option>`
+                    }
+                    form += `</select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <td><button onclick="saveProduct()">Save</button></td>
+                            </tr>
+                        </table>`;
+                    document.getElementById("display").innerHTML = form;
+                }
+            })
+        }
+
+        function saveProduct() {
+            let product = {
+                "name": document.getElementById("name").value,
+                "price": document.getElementById("price").value,
+                "quantity": document.getElementById("quantity").value,
+                "category": {
+                    "id": document.getElementById("category").value,
+                }
+            }
+            console.log(product)
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "POST",
+                url: "http://localhost:8080/api/products",
+                data: JSON.stringify(product),
+                success: function () {
+                    alert("Thêm Sản Phẩm Thành Công")
+                    getAllProduct();
+                },
+                // error: function (error) {
+                //     console.log(error)
+                // }
+            })
+        }
+    </script>
+</head>
+<body>
+<input type="text" id="search">
+<button onclick="findByName()">Tìm</button>
+<button onclick="getAllProduct()">Hiện Danh Sách Sản Phẩm</button>
+<button onclick="formCreate()">Thêm Mới Sản Phẩm</button>
+<div id="display">
+
+</div>
+</body>
+</html>
