@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        function getAllStudent() {
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:8080/api/students",
+                success: function (data) {
+                    console.log(data)
+                    displayClass(data)
+                }
+            })
+        }
+        function findByName() {
+            let text = document.getElementById("search").value;
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:8080/api/students/findByName?key="+text,
+                success: function (data) {
+                    console.log(data)
+                    displayClass(data)
+                }
+            })
+        }
+
+        function displayClass(array) {
+            let res = "";
+            res += `<table border="1" cellpadding="5">
+                <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Score</th>
+                    <th>ClassRoom</th>
+                    <th colspan="2">Action</th>
+                </tr>`
+            for (let i = 0; i < array.length; i++) {
+                res += `<tr>
+                    <td> ${array[i].name}</td>
+                    <td> ${array[i].age}</td>
+                    <td> ${array[i].score}</td>
+                    <td> ${array[i].classRoom.name}</td>
+                    <td><button onclick="showFormEditStudent(${array[i].id})">Edit</button></td>
+                    <td><button onclick="deleteStudent(${array[i].id})">Delete</button></td>
+                        </tr>`
+            }
+            res += `</table>`
+            document.getElementById("display").innerHTML = res;
+        }
+
+        function showFormAdd() {
+            let form =
+                "<p>Name</p>" + '<input type="text" id="name">\n' + "<br>" +
+                "<p>AGE</p>" + '<input type="text" id="age">\n' + "<br>" +
+                "<p>Score</p>" + '<input type="text" id="score">' + "<br>" +
+                "<p>Class</p>" + '<select  id="classRoom">\n' +
+                $.ajax({
+                    type: "GET",
+                    url: "http://localhost:8080/api/classRooms",
+                    success: function (array) {
+                        for (let i = 0; i < array.length; i++) {
+                            form += `<option value="${array[i].id}">${array[i].name}</option>`
+                        }
+                        form += '</select>\n' +
+                            '<button onclick="saveStudent()">Thêm</button>';
+                        document.getElementById("display").innerHTML = form;
+                    }
+                })
+
+        }
+
+        function saveStudent() {
+            let name = document.getElementById("name").value;
+            let age = document.getElementById("age").value;
+            let score = document.getElementById("score").value;
+            let classRoom = document.getElementById("classRoom").value;
+            let data = {
+                name: name,
+                age: age,
+                score: score,
+                classRoom: {
+                    id: classRoom
+                }
+            }
+            console.log(data)
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "POST",
+                url: "http://localhost:8080/api/students",
+                data: JSON.stringify(data),
+                success: alert("Thêm thành công"),
+                error: function (error) {
+                    console.log(error)
+                }
+            })
+        }
+
+        function showFormEditStudent(id) {
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:8080/api/students/" + id,
+                success: function (student) {
+                    console.log(student)
+                    $.ajax({
+                        type: "GET",
+                        url: "http://localhost:8080/api/classRooms",
+                        success: function (classRooms) {
+                            console.log(classRooms)
+                            let form =
+                                "<p>Name</p>" + `<input type="text" id="name" value="${student.name}">\n` + "<br>" +
+                                "<p>AGE</p>" + `<input type="text" id="age" value="${student.age}">\n` + "<br>" +
+                                "<p>Score</p>" + `<input type="text" id="score" value="${student.score}">\n` + "<br>" +
+                                "<p>Class</p>" + `<select  id="classRoom">
+                                 <option value="${student.classRoom.id}"> ${student.classRoom.name}</option>`
+                            for (let i = 0; i < classRooms.length; i++) {
+                                form += `<option value="${classRooms[i].id}">${classRooms[i].name}</option>`
+                            }
+                            form += `</select>`
+                                + `<button onclick="updateStudent(${student.id})">Thay đổi</button>`
+                            document.getElementById("display").innerHTML = form;
+                        }
+                    })
+                }
+            })
+        }
+
+        function updateStudent(id) {
+            let name = document.getElementById("name").value;
+            let age = document.getElementById("age").value;
+            let score = document.getElementById("score").value;
+            let classRoom = document.getElementById("classRoom").value;
+            let student = {
+                id: id,
+                name: name,
+                age: age,
+                score: score,
+                classRoom: {
+                    id: classRoom
+                }
+            }
+            console.log(student)
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "PUT",
+                url: "http://localhost:8080/api/students/" + id,
+                data: JSON.stringify(student),
+                success: alert("Sứa max thành công"),
+                error: function (error) {
+                    console.log(error)
+                }
+            })
+        }
+
+        function deleteStudent(id) {
+            if (confirm("Are you sure")) {
+                $.ajax({
+                    type: "DELETE",
+                    url: "http://localhost:8080/api/students/" + id,
+                    success: getAllClass,
+                    error: function (error){
+                        console.log(error)
+                    }
+                })
+            }
+        }
+    </script>
+</head>
+<body>
+<input type="text" id="search"> <button onclick="findByName()">Tim</button>
+<button onclick="getAllStudent()">Hiện thị Danh sách</button>
+<button onclick="showFormAdd()">Thêm mới</button>
+<div id="display"></div>
+
+</body>
+</html>

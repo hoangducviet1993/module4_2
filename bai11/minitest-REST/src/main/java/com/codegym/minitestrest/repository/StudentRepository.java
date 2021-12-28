@@ -11,7 +11,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
-    Page<Student> findByNameContaining(String firstName, Pageable pageable);
+    Page<Student> findByNameContaining(String name, Pageable pageable);
+    Iterable<Student> findByNameContaining(String name);
 
     @Query("select s from Student  s where s.score > 8 ")
     Page<Student>findNameByOrderScoreGreaterThan8(Pageable pageable);

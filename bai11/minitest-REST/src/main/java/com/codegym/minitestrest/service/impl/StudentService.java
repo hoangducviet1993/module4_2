@@ -48,8 +48,13 @@ public class StudentService implements IStudentService {
     }
 
     @Override
-    public Page<Student> findByNameContaining(String key, Pageable pageable) {
-        return studentRepository.findByNameContaining(key, pageable);
+    public Page<Student> findByNameContaining(String name, Pageable pageable) {
+        return studentRepository.findByNameContaining(name, pageable);
+    }
+
+    @Override
+    public Iterable<Student> findByNameContaining(String name) {
+        return studentRepository.findByNameContaining(name);
     }
 
 

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/students")
 public class StudentRestController {
     @Autowired
@@ -65,5 +66,13 @@ public class StudentRestController {
         }
         studentService.remove(id);
         return new ResponseEntity<>(studentOptional.get(), HttpStatus.NO_CONTENT);
+    }
+    @GetMapping("findByName")
+    public ResponseEntity<Iterable<Student>> findByName(@RequestParam String key) {
+        List<Student> students = (List<Student>) studentService.findByNameContaining(key);
+        if (students.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(students, HttpStatus.OK);
     }
 }
