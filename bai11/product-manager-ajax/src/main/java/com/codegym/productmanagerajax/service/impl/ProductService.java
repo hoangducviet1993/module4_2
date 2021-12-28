@@ -15,21 +15,21 @@ public class ProductService implements IProductService {
 
     @Override
     public Iterable<Product> findAll() {
-        return null;
+        return productRepository.findAll();
     }
 
     @Override
     public Optional<Product> findById(Long id) {
-        return Optional.empty();
+        return productRepository.findById(id);
     }
 
     @Override
     public Product save(Product product) {
-        return null;
+        return productRepository.save(product);
     }
 
     @Override
     public void remove(Long id) {
-
+            productRepository.deleteById(id);
     }
 }
