@@ -33,18 +33,18 @@ public class HouseService implements IHouseService {
         houseRepository.deleteById(id);
     }
 
-//    @Override
-//    public Iterable<House> findAllByOrderByName() {
-//        return houseRepository.findAllByOrderByName();
-//    }
+    @Override
+    public Iterable<House> findAllByOrderByName() {
+        return houseRepository.findAllByOrderByName();
+    }
 
-//    @Override
-//    public Iterable<House> findWhereBathroomMoreThan2() {
-//        return houseRepository.findWhereBathroomMoreThan2();
-//    }
-//
-//    @Override
-//    public Iterable<House> findByCategory(Long id) {
-//        return houseRepository.findByCategory(id);
-//    }
+    @Override
+    public Iterable<House> findWhereBathroomMoreThan2() {
+        return houseRepository.findWhereBathroomMoreThan2();
+    }
+
+    @Override
+    public Iterable<House> findByCategory(Long id) {
+        return houseRepository.findByCategory(id);
+    }
 }

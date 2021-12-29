@@ -56,6 +56,7 @@ public class HouseController {
 
         return new ResponseEntity<>(houseService.save(house), HttpStatus.OK);
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<House> deleteStudent(@PathVariable Long id) {
         Optional<House> houseOptional = houseService.findById(id);
@@ -65,13 +66,32 @@ public class HouseController {
         houseService.remove(id);
         return new ResponseEntity<>(houseOptional.get(), HttpStatus.NO_CONTENT);
     }
+
     // Nâng cao
-//    @GetMapping("/orderByName")
-//        public ResponseEntity<Iterable<House>> findAllOderByName () {
-//            List<House> houses = (List<House>) houseService.findAllByOrderByName();
-//            if (houses.isEmpty()) {
-//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//            }
-//            return new ResponseEntity<>(houses, HttpStatus.OK);
-//        }
+    @GetMapping("/orderByName")
+    public ResponseEntity<Iterable<House>> findAllOderByName() {
+        List<House> houses = (List<House>) houseService.findAllByOrderByName();
+        if (houses.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(houses, HttpStatus.OK);
+    }
+
+    @GetMapping("/findByRoom")
+    public ResponseEntity<Iterable<House>> findWhereBathroomMoreThan2() {
+        List<House> houses = (List<House>) houseService.findWhereBathroomMoreThan2();
+        if (houses.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(houses, HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{id}")
+    public ResponseEntity<Iterable<House>> findByCategory(@PathVariable Long id) {
+        List<House> houses = (List<House>) houseService.findByCategory(id);
+        if (houses.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(houses, HttpStatus.OK);
+    }
 }

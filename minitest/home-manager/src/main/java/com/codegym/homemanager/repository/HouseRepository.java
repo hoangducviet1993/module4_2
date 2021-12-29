@@ -8,11 +8,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HouseRepository extends JpaRepository<House, Long> {
-//    Iterable<House> findAllByOrderByName();
+    Iterable<House> findAllByOrderByName();
 
-//    @Query("select h from House h where h.bathroom > 2")
-//    Iterable<House> findWhereBathroomMoreThan2();
-//
-//    @Query("select h from House h where h.category.id =: id")
-//    Iterable<House> findByCategory(@Param("id") Long id);
+    @Query("select h from House h where h.bathroom > 2")
+    Iterable<House> findWhereBathroomMoreThan2();
+
+    @Query("select h from House h where h.category.id = :id")
+    Iterable<House> findByCategory(@Param("id") Long id);
 }
