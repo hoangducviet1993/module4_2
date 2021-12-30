@@ -185,7 +185,35 @@
                 })
             }
         }
-
+        function viewBlog(id) {
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:8080/api/blogs/" + id,
+                success: function (blog) {
+                    console.log(blog)
+                    let view = `<table cellpadding="5">
+                                    <tr>
+                                        <th>Title: </th>
+                                        <td>${blog.title}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Content: </th>
+                                        <td>${blog.content}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Time: </th>
+                                        <td>${blog.time}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Mode: </th>
+                                        <td>${blog.mode.name}</td>
+                                    </tr>
+                                </table>`;
+                    console.log(view)
+                    document.getElementById("display").innerHTML = view;
+                }
+            })
+        }
     </script>
 </head>
 <body>
