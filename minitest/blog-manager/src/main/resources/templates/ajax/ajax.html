@@ -12,11 +12,39 @@
                 success: function (blog) {
                     console.log(blog)
                     displayBlog(blog)
+
                 }
             })
         }
 
         function displayBlog(array) {
+            let res = "";
+            res += `<table border="1" cellpadding="5">
+                <tr>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>Time</th>
+                    <th>Mode</th>
+                    <th colspan="3">Action</th>
+                </tr>`
+            for (let i = 0; i < array.length; i++) {
+                res += `<tr>
+                    <td> ${array[i].title}</td>
+                    <td> ${array[i].content}</td>
+                    <td> ${array[i].time}</td>
+                    <td> ${array[i].mode.name}</td>
+                    <td><button onclick="viewBlog(${array[i].id})">View</button></td>
+                    <td><button onclick="showFormEditBlog(${array[i].id})">Edit</button></td>
+                    <td><button onclick="deleteBlog(${array[i].id})">Delete</button></td>
+                        </tr>`
+            }
+            res += `</table>`
+            res += '<button onclick="getAllBlogByMode()">Quay lại Trang chủ</button>'
+            console.log(res)
+            document.getElementById("display").innerHTML = res;
+        }
+
+        function displayBlog2(array) {
             let res = "";
             res += `<table border="1" cellpadding="5">
                 <tr>
@@ -48,7 +76,7 @@
                 url: "http://localhost:8080/api/blogs/findByMode",
                 success: function (blog) {
                     console.log(blog)
-                    displayBlog(blog)
+                    displayBlog2(blog)
                 }
             })
         }
@@ -84,6 +112,7 @@
                                 <td><button onclick="saveBlog()">Save</button></td>
                             </tr>
                         </table>`;
+                    form += '<button onclick="getAllBlogByMode()">Quay lại Trang chủ</button>'
                     document.getElementById("display").innerHTML = form;
                 }
             })
@@ -115,6 +144,7 @@
                 }
             })
         }
+
         function showFormEditBlog(id) {
             $.ajax({
                 type: "GET",
@@ -129,14 +159,15 @@
                             let form =
                                 "<p>Title</p>" + `<input type="text" id="title" value="${blog.title}">\n` + "<br>" +
                                 "<p>Content</p>" + `<input type="text" id="content" value="${blog.content}">\n` + "<br>" +
-                                `<input type="hidden" id="time" value="${blog.time}">\n`+
+                                `<input type="hidden" id="time" value="${blog.time}">\n` +
                                 "<p>Mode</p>" + `<select  id="mode">
                                  <option value="${blog.mode.id}"> ${blog.mode.name}</option>`
                             for (let i = 0; i < mode.length; i++) {
                                 form += `<option value="${mode[i].id}">${mode[i].name}</option>`
                             }
                             form += `</select>`
-                                + `<button onclick="updateBlog(${blog.id})">Thay đổi</button>`
+                                + `<button onclick="updateBlog(${blog.id})">Thay đổi</button>`+'<br>'
+                            +'<button onclick="getAllBlogByMode()">Quay lại Trang chủ</button>'
                             console.log(form)
                             document.getElementById("display").innerHTML = form;
                         }
@@ -144,6 +175,7 @@
                 }
             })
         }
+
         function updateBlog(id) {
             let title = document.getElementById("title").value;
             let content = document.getElementById("content").value;
@@ -153,7 +185,7 @@
                 id: id,
                 title: title,
                 content: content,
-                time:time,
+                time: time,
                 mode: {
                     id: mode
                 }
@@ -173,6 +205,7 @@
                 }
             })
         }
+
         function deleteBlog(id) {
             if (confirm("Are you sure")) {
                 $.ajax({
@@ -185,6 +218,7 @@
                 })
             }
         }
+
         function viewBlog(id) {
             $.ajax({
                 type: "GET",
@@ -209,6 +243,7 @@
                                         <td>${blog.mode.name}</td>
                                     </tr>
                                 </table>`;
+                    view += '<button onClick="getAllBlogByMode()">Quay lại Trang chủ</button>'
                     console.log(view)
                     document.getElementById("display").innerHTML = view;
                 }
@@ -216,9 +251,9 @@
         }
     </script>
 </head>
-<body>
+<body onload="getAllBlogByMode()">
 <button onclick="getAllBlog()">Hiện danh sách Blog</button>
-<button onclick="getAllBlogByMode()">Hiện danh sách chế độ công khai</button>
+<!--<button onclick="getAllBlogByMode()">Trang chủ</button>-->
 <button onclick="formCreate()">Thêm Mới</button>
 <div id="display"></div>
 </body>
