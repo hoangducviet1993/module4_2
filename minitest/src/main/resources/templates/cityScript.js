@@ -41,7 +41,7 @@ function displayCity(array) {
     </tr>`
     for (let i = 0; i < array.length; i++) {
         res += `<tr>
-    <td> ${array[i].id}</td>
+    <td> ${i}</td>
     <td onclick="viewCity(${array[i].id})"> ${array[i].name}</td>
     <td> ${array[i].country.name}</td>
     <td><button onclick="showFormEditCity(${array[i].id})">Edit</button></td>
@@ -168,4 +168,17 @@ function saveCity() {
             console.log(error)
         }
     })
+}
+function deleteCityz(id) {
+    if (confirm("Are you sure")) {
+        $.ajax({
+            type: "DELETE",
+            url: "http://localhost:8080/api/cities?id=" + id,
+            success: getAllCity,
+            error: function (error) {
+                console.log(error)
+            }
+        })
+    } else {
+    }
 }
