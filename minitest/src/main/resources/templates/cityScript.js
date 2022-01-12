@@ -182,3 +182,68 @@ function deleteCityz(id) {
     } else {
     }
 }
+
+function showFormEditCity(id) {
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8080/api/cities?id=" + id,
+        success: function (city) {
+            console.log(city)
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:8080/api/countries",
+                success: function (country) {
+                    console.log(country)
+                    let form =
+                        "<p>Tên Thành phố:</p>" + `<input type="text" id="name" value="${city.name}">\n` + "<br>" +
+                        "<p>Diện tích:</p>" + `<input type="text" id="area" value="${city.area}">\n` + "<br>" +
+                        "<p>Dân sô:</p>" + `<input type="text" id="population" value="${city.population}">\n` + "<br>" +
+                        "<p>GDP:</p>" + `<input type="number" id="gdp" value="${city.gdp}">\n` + "<br>" +
+                        "<p>Mô Tả:</p>" + `<input type="text" id="description" value="${city.description}">\n` + "<br>" +
+                        "<p>Quốc Gia:</p>" + `<select  id="country">
+                                 <option value="${city.country.id}"> ${city.country.name}</option>`
+                    for (let i = 0; i < country.length; i++) {
+                        form += `<option value="${country[i].id}">${country[i].name}</option>`
+                    }
+                    form += `</select>`
+                        + `<button onclick="updateCity(${city.id})">Thay đổi</button>` + '<br>'
+                    console.log(form)
+                    document.getElementById("listCity").innerHTML = form;
+                }
+            })
+        }
+    })
+}
+
+function updateCity(id) {
+    let name = document.getElementById("name").value;
+    let area = document.getElementById("area").value;
+    let population = document.getElementById("population").value;
+    let gdp = document.getElementById("gdp").value;
+    let description = document.getElementById("description").value;
+    let country = document.getElementById("country").value;
+    let quiz = {
+        name: name,
+        area: area,
+        population: population,
+        gdp: gdp,
+        description: description,
+        country: {
+            "id": country
+        }
+    }
+    console.log(quiz)
+    $.ajax({
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        type: "PUT",
+        url: "http://localhost:8080/api/cities?id=" + id,
+        data: JSON.stringify(quiz),
+        success: alert("Sứa thành công"),
+        error: function (error) {
+            console.log(error)
+        }
+    })
+}
