@@ -84,6 +84,12 @@ function viewCity(id) {
                                         <th>Mô tả: </th>
                                         <td>${city.description}</td>
                                     </tr>
+                                   
+                                    <tr>
+                                         <td><button onclick="showFormEditCity(${city.id})">Edit</button></td>
+                                         <td><button onclick="deleteCityz(${city.id})">Delete</button></td>
+                                    </tr>
+                                   
                                 </table>`;
             console.log(view)
             document.getElementById("listCity").innerHTML = view;
@@ -169,6 +175,7 @@ function saveCity() {
         }
     })
 }
+
 function deleteCityz(id) {
     if (confirm("Are you sure")) {
         $.ajax({
